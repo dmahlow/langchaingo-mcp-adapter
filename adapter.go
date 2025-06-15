@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log/slog"
+	"strings"
 	"time"
 
 	"github.com/mark3labs/mcp-go/client"
@@ -56,7 +57,24 @@ func (t *mcpTool) Call(ctx context.Context, input string) (string, error) {
 		return fmt.Sprintf("call the tool error: %s", err), nil
 	}
 
-	return res.Content[0].(mcp.TextContent).Text, nil
+	// Handle multiple content types (text and images)
+	var results []string
+	for _, content := range res.Content {
+		switch c := content.(type) {
+		case mcp.TextContent:
+			results = append(results, c.Text)
+		case mcp.ImageContent:
+			// Convert image to base64 data URL
+			dataURL := fmt.Sprintf("data:%s;base64,%s", c.MIMEType, c.Data)
+			results = append(results, dataURL)
+		default:
+			// Handle any other content types as text representation
+			results = append(results, fmt.Sprintf("Unsupported content type: %T", c))
+		}
+	}
+
+	// Join all content with newlines
+	return strings.Join(results, "\n"), nil
 }
 
 // MCPAdapter adapts an MCP client to the LangChain Go tools interface.
