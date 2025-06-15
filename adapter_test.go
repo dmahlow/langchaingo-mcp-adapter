@@ -312,6 +312,54 @@ func TestToolCall(t *testing.T) {
 			expectError:    false,
 			expectedOutput: "call the tool error: assert.AnError general error for testing",
 		},
+		{
+			name:        "successful tool call with image content",
+			toolName:    "image-tool",
+			toolDesc:    "A tool that returns images",
+			inputSchema: map[string]any{"param1": map[string]any{"type": "string"}},
+			setupMock: func(m *MockMCPClient) {
+				m.On("CallTool", mock.Anything, mock.MatchedBy(func(req mcp.CallToolRequest) bool {
+					return req.Params.Name == "image-tool"
+				})).Return(&mcp.CallToolResult{
+					Content: []mcp.Content{
+						mcp.ImageContent{
+							Type:     "image",
+							Data:     "ZmFrZS1pbWFnZS1kYXRh", // base64 of "fake-image-data"
+							MIMEType: "image/png",
+						},
+					},
+				}, nil)
+			},
+			input:          `{"param1": "test value"}`,
+			expectError:    false,
+			expectedOutput: "data:image/png;base64,ZmFrZS1pbWFnZS1kYXRh",
+		},
+		{
+			name:        "successful tool call with mixed content",
+			toolName:    "mixed-tool",
+			toolDesc:    "A tool that returns text and images",
+			inputSchema: map[string]any{"param1": map[string]any{"type": "string"}},
+			setupMock: func(m *MockMCPClient) {
+				m.On("CallTool", mock.Anything, mock.MatchedBy(func(req mcp.CallToolRequest) bool {
+					return req.Params.Name == "mixed-tool"
+				})).Return(&mcp.CallToolResult{
+					Content: []mcp.Content{
+						mcp.TextContent{
+							Type: "text",
+							Text: "Here is the analysis:",
+						},
+						mcp.ImageContent{
+							Type:     "image",
+							Data:     "Y2hhcnQtZGF0YQ==", // base64 of "chart-data"
+							MIMEType: "image/jpeg",
+						},
+					},
+				}, nil)
+			},
+			input:          `{"param1": "test value"}`,
+			expectError:    false,
+			expectedOutput: "Here is the analysis:\ndata:image/jpeg;base64,Y2hhcnQtZGF0YQ==",
+		},
 	}
 
 	for _, tt := range tests {
