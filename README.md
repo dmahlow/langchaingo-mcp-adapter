@@ -17,7 +17,7 @@ This adapter allows you to use tools defined on an MCP server with the LangChain
 ## Installation
 
 ```bash
-go get github.com/i2y/langchaingo-mcp-adapter
+go get github.com/dmahlow/langchaingo-mcp-adapter
 ```
 
 ## Usage
@@ -30,7 +30,7 @@ import (
     "log"
     "os"
 
-    "github.com/i2y/langchaingo-mcp-adapter"
+    "github.com/dmahlow/langchaingo-mcp-adapter"
     "github.com/mark3labs/mcp-go/client"
     "github.com/tmc/langchaingo/agents"
     "github.com/tmc/langchaingo/chains"

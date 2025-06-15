@@ -19,7 +19,7 @@ import (
 	langchaingoTools "github.com/tmc/langchaingo/tools"
 	"github.com/tmc/langchaingo/tools/wikipedia"
 
-	mcpadapter "github.com/i2y/langchaingo-mcp-adapter"
+	mcpadapter "github.com/dmahlow/langchaingo-mcp-adapter"
 )
 
 func main() {
@@ -80,7 +80,6 @@ func run() error {
 	return nil
 }
 
-
 // createLLM creates an LLM instance based on available API keys
 func createLLM() (llms.Model, error) {
 	ctx := context.Background()
@@ -131,7 +130,7 @@ func startMCPServer() (client.MCPClient, error) {
 	executableName := getExecutableName("mcp-server")
 	serverBinary := filepath.Join(serverDir, executableName)
 	serverSource := filepath.Join(serverDir, "main.go")
-	
+
 	// Check if binary exists
 	if _, err := os.Stat(serverBinary); os.IsNotExist(err) {
 		fmt.Println("Building MCP server binary...")
@@ -142,7 +141,7 @@ func startMCPServer() (client.MCPClient, error) {
 		}
 		fmt.Println("MCP server binary built successfully")
 	}
-	
+
 	// Use the binary instead of go run to avoid stdio issues
 	fmt.Printf("Starting MCP server from: %s\n", serverBinary)
 	mcpClient, err := client.NewStdioMCPClient(serverBinary, []string{})
@@ -154,6 +153,6 @@ func startMCPServer() (client.MCPClient, error) {
 			return nil, fmt.Errorf("start server: %w", err)
 		}
 	}
-	
+
 	return mcpClient, nil
 }

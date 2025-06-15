@@ -5,7 +5,7 @@ import (
 	"context"
 	"testing"
 
-	adapter "github.com/i2y/langchaingo-mcp-adapter"
+	adapter "github.com/dmahlow/langchaingo-mcp-adapter"
 
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/stretchr/testify/assert"
