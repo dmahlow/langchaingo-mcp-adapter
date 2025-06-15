@@ -11,6 +11,8 @@ This adapter allows you to use tools defined on an MCP server with the LangChain
 - Connect to any MCP server
 - Automatically discover MCP tools from a specified MCP server and make them available to LangChain Go
 - Wrap MCP tools as LangChain Go tools
+- Support for both text and image content in tool responses
+- Automatic conversion of image content to base64 data URLs
 
 ## Installation
 
@@ -102,6 +104,7 @@ See the `example` directory for complete examples:
 - `example/server`: A minimal MCP server example that provides a URL fetching tool
 
 The example agent supports multiple LLM providers:
+
 - **Google AI (Gemini)**: Set `GOOGLE_API_KEY`
 - **OpenAI**: Set `OPENAI_API_KEY`
 - **Anthropic (Claude)**: Set `ANTHROPIC_API_KEY`
@@ -109,6 +112,12 @@ The example agent supports multiple LLM providers:
 The example is cross-platform and works on Windows, macOS, and Linux. The example automatically builds and runs the MCP server from source. See the [example README](./example/agent/README.md) for detailed setup instructions.
 
 The mcp-curl server in this sample is based on the code from [this blog](https://k33g.hashnode.dev/creating-an-mcp-server-in-go-and-serving-it-with-docker).
+
+## Image Support
+
+The adapter supports MCP tools that return image content. When an MCP tool returns image data, it is automatically converted to a base64 data URL format (e.g., `data:image/png;base64,iVBORw0KGgo...`) that can be easily processed by LLMs and other components in the LangChain Go pipeline.
+
+Mixed content (text + images) is also supported - multiple content items are joined with newlines in the tool result.
 
 ## Requirements
 
