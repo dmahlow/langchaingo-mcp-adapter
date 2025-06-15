@@ -1,4 +1,4 @@
-module github.com/i2y/langchaingo-mcp-adapter
+module github.com/dmahlow/langchaingo-mcp-adapter
 
 go 1.23
 
